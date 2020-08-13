@@ -25,26 +25,35 @@ when the reversed integer overflows.
 pub struct Solution {}
 
 impl Solution {
-  pub fn reverse(x: i32) -> i32 {
-    let mut input: i64 = x as i64;
-    let mut out: i64 = 0;
-    while input != 0 {
-      let rem = input % 10;
-      out = out * 10 + rem;
-      input /= 10;
-    }
-    if out > i32::max_value() as i64 || out < i32::min_value() as i64 {
-      return 0;
-    }
-    return out as i32;
-  }
+	pub fn reverse(x: i32) -> i32 {
+		let neg = if x < 0 {
+			-1
+		} else {
+			1
+		};
+
+		let mut input = if x < 0 {
+			-x
+		} else {
+			x
+		} as i64;
+		let mut out = 0i64;
+		while input > 0 {
+		    out *= 10;
+		    out += &input % 10;
+		    input /= 10;
+		}
+		if out > std::i32::MAX as i64 || out < std::i32::MIN as i64 {
+			return 0;
+		}
+		return (out*neg) as i32;
+	}
 }
 
 fn main() {
   assert_eq!(321, Solution::reverse(123));
   assert_eq!(-321, Solution::reverse(-123));
   assert_eq!(21, Solution::reverse(120));
-  // check whether the number exceeds the range of i32.
   assert_eq!(0, Solution::reverse(1534236469));
   println!("Pass test cases!");
 }
